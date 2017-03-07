@@ -1,4 +1,2 @@
-<p>
-  laughing-man works!
-</p>
-<input type="file" (change)="showImage($event)" />
+<input #fileInput type="file" (change)="showImage4Canvas(fileInput)" />
+<canvas #dropCanvas *ngIf="fileInput.files != null" width="300" height="300"></canvas>
