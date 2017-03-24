@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 
 const Tracker = require('clmtrackr/clmtrackr.js');
 const faceModel = require('clmtrackr/models/model_pca_20_svm.js');
+const ccv = require('local_module/ccv.js');
 
 @Component({
   selector: 'app-laughing-man',
