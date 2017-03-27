@@ -1,8 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 
-const Tracker = require('clmtrackr/clmtrackr.js');
-const faceModel = require('clmtrackr/models/model_pca_20_svm.js');
-const ccv = require('local_module/ccv.js');
+require('tracking');
+require('tracking/build/data/face-min')
 
 @Component({
   selector: 'app-laughing-man',
@@ -47,4 +46,24 @@ export class LaughingManComponent implements OnInit {
     });
     reader.readAsDataURL(blob);
   }
+
+  public convertImage() {
+
+    let tracker = new tracking.ObjectTracker(['face']);
+
+    tracker.on('track', (event) => {
+      if (event.data.length === 0) {
+        // No objects were detected in this frame.
+      } else {
+        event.data.forEach((rect) => {
+          console.log(rect);
+          // rect.x, rect.y, rect.height, rect.width
+        });
+      }
+    });
+
+    tracking.track('#dropCanvas', tracker);
+  }
+  
+  
 }
