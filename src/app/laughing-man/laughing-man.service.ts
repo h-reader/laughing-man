@@ -6,10 +6,15 @@ require('tracking/build/data/face-min');
 @Injectable()
 export class LaughingManService {
 
+  /** 画像変換用のcanvas */
   private canvas: HTMLCanvasElement;
 
   constructor() { }
 
+  /**
+   * 対象のキャンバスをセットする。
+   * @param canvas 画像変換用の対象キャンバス
+   */
   public setCanvas(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
   }
@@ -20,11 +25,12 @@ export class LaughingManService {
    */
   public setImage(blob: Blob): boolean {
 
-    // キャンバスが設定されていない場合エラー
-    if(!this.isSetCanvas()) { 
+    // キャンバスが設定されていない場合異常終了
+    if (!this.isSetCanvas()) {
       return false;
     }
 
+    // キャンバス情報を一度クリアする
     this.clearCanvas();
 
     // blobデータをcanvasに書き込み
@@ -44,20 +50,22 @@ export class LaughingManService {
     return true;
   }
 
-  
+  /**
+   * 対象のキャンバスを顔認識させ、認識した顔情報を
+   * 笑い男に置き換える。
+   */
   public convertImage() {
 
     const tracker = new tracking.ObjectTracker(['face']);
 
     tracker.on('track', (event) => {
       if (event.data.length === 0) {
-        // No objects were detected in this frame.
+        // 顔画像が見つからない場合.
         console.log('Sorry! Can not find face!');
       } else {
         event.data.forEach((rect) => {
-          console.log(rect);
+          // 顔画像が見つかった場合
           this.convertLaughingMan(rect);
-          // rect.x, rect.y, rect.height, rect.width
         });
       }
     });
@@ -77,17 +85,23 @@ export class LaughingManService {
   /**
    * キャンバスの描画内容をクリアする
    */
-  private clearCanvas(): boolean {
-    if(!this.isSetCanvas()) { 
-      return false;
+  private clearCanvas() {
+
+    // キャンバスがセットされていなければ終了する
+    if (!this.isSetCanvas()) {
+      return;
     }
     const ctx = this.canvas.getContext('2d');
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
+  /**
+   * 顔認識した座標情報からキャンバス内の顔情報を笑い男で上書きする
+   */
   private convertLaughingMan(rect: tracking.TrackRect): boolean {
-    
-    if(!this.isSetCanvas()) { 
+
+    // キャンバス画存在しない場合異常終了とする
+    if (!this.isSetCanvas()) {
       return false;
     }
 
