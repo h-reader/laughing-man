@@ -15,8 +15,12 @@ export class LaughingManService {
    * 対象のキャンバスをセットする。
    * @param canvas 画像変換用の対象キャンバス
    */
-  public setCanvas(canvas: HTMLCanvasElement) {
+  public setCanvas(canvas: HTMLCanvasElement): boolean {
+    if(canvas == null) {
+      return false;
+    }
     this.canvas = canvas;
+    return true;
   }
 
   /**
@@ -100,7 +104,7 @@ export class LaughingManService {
    */
   private convertLaughingMan(rect: tracking.TrackRect): boolean {
 
-    // キャンバス画存在しない場合異常終了とする
+    // キャンバスが存在しない場合異常終了とする
     if (!this.isSetCanvas()) {
       return false;
     }
