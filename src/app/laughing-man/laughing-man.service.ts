@@ -8,6 +8,8 @@ export class LaughingManService {
 
   /** 画像変換用のcanvas */
   private canvas: HTMLCanvasElement;
+  /** canvasに描画するイメージ */
+  private loadImage: HTMLImageElement;
 
   constructor() { }
 
@@ -40,15 +42,17 @@ export class LaughingManService {
     // blobデータをcanvasに書き込み
     const ctx = this.canvas.getContext('2d');
     const canvas = this.canvas;
+    this.loadImage = new Image();
+    const loadImage= this.loadImage;
     const reader = new FileReader();
-    const image = new Image();
+
     reader.onload = (function(theFile) {
-      image.onload = function() {
-        canvas.width = image.width;
-        canvas.height = image.height;
-        ctx.drawImage(image, 0, 0, image.width, image.height);
+      loadImage.onload = function() {
+        canvas.width = loadImage.width;
+        canvas.height = loadImage.height;
+        ctx.drawImage(loadImage, 0, 0, loadImage.width, loadImage.height);
       };
-      image.src = this.result;
+      loadImage.src = this.result;
     });
     reader.readAsDataURL(blob);
     return true;
@@ -77,12 +81,17 @@ export class LaughingManService {
     tracking.track('#dropCanvas', tracker);
   }
 
+  /**
+   * キャンバスにイメージがセットされているか否か
+   */
+  public isSetImage(): boolean {
+    return this.canvas != null && this.loadImage != null;
+  }
 
   /**
    * キャンバスがセットされているどうか
    */
   private isSetCanvas(): boolean {
-
     return this.canvas != null;
   }
 
@@ -97,6 +106,7 @@ export class LaughingManService {
     }
     const ctx = this.canvas.getContext('2d');
     ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.loadImage = null;
   }
 
   /**

@@ -1,6 +1,6 @@
 <label for="fileInput">
     画像選択
-    <input #fileInput id="fileInput" type="file" style="display: none" (change)="showImage4Canvas(fileInput)" />
+    <input #fileInput id="fileInput" type="file" (change)="showImage4Canvas(fileInput)" />
 </label>
-<canvas id="dropCanvas" #dropCanvas [hidden]="fileInput.files == null"></canvas>
-<button (click)="convertImage()">LaughingMan!!</button>
+<canvas id="dropCanvas" [hidden]="isSetImage() == false" #dropCanvas ></canvas>
+<button class="btn btn-primary" [disabled]="isSetImage() == false" (click)="convertImage()">LaughingMan!!</button>

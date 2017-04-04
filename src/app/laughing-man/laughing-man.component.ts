@@ -11,10 +11,11 @@ import { LaughingManService } from './laughing-man.service';
 
 
 export class LaughingManComponent implements OnInit {
-
+  
   /** 画像選択後に表示するキャンバス */
   @ViewChild('dropCanvas') dropCanvas;
 
+  /** コンストラクタ */
   constructor(private laughingManService: LaughingManService) { }
 
   ngOnInit() {
@@ -32,9 +33,17 @@ export class LaughingManComponent implements OnInit {
     }
   }
 
+  /**
+   * ロードした画像の顔部分を変更する
+   */
   public convertImage() {
-
     this.laughingManService.convertImage();
   }
 
+  /**
+   * キャンバスにイメージがセットされているか
+   */
+  public isSetImage(): boolean {
+    return (this.laughingManService.isSetImage());
+  }
 }
