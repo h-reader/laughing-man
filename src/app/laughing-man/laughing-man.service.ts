@@ -3,6 +3,12 @@ import { Injectable } from '@angular/core';
 require('tracking');
 require('tracking/build/data/face-min');
 
+module myConst {
+  /** canvasの最大サイズ */
+  export const canvasMaxSize: number = 1000;
+}
+
+
 @Injectable()
 export class LaughingManService {
 
@@ -14,11 +20,11 @@ export class LaughingManService {
   constructor() { }
 
   /**
-   * 対象のキャンバスをセットする。
-   * @param canvas 画像変換用の対象キャンバス
+   * 対象のcanvasをセットする。
+   * @param canvas 画像変換用の対象canvas
    */
   public setCanvas(canvas: HTMLCanvasElement): boolean {
-    if(canvas == null) {
+    if (canvas == null) {
       return false;
     }
     this.canvas = canvas;
@@ -26,31 +32,35 @@ export class LaughingManService {
   }
 
   /**
-   * 引数のキャンバスに画像イメージを表示する。
+   * canvasに画像イメージを表示する。
    * @param blob 画像イメージ
    */
   public setImage(blob: Blob): boolean {
 
-    // キャンバスが設定されていない場合異常終了
+    // canvasが設定されていない場合異常終了
     if (!this.isSetCanvas()) {
       return false;
     }
 
-    // キャンバス情報を一度クリアする
+    // canvas情報を一度クリアする
     this.clearCanvas();
 
     // blobデータをcanvasに書き込み
     const ctx = this.canvas.getContext('2d');
     const canvas = this.canvas;
     this.loadImage = new Image();
-    const loadImage= this.loadImage;
+    const loadImage = this.loadImage;
     const reader = new FileReader();
+    const self = this;
 
     reader.onload = (function(theFile) {
       loadImage.onload = function() {
-        canvas.width = loadImage.width;
-        canvas.height = loadImage.height;
-        ctx.drawImage(loadImage, 0, 0, loadImage.width, loadImage.height);
+
+        // canvasサイズを変更
+        self.resizeCanvas(loadImage);
+        // canvasに画像を表示
+        ctx.drawImage(loadImage, 0, 0, canvas.width, canvas.height);
+
       };
       loadImage.src = this.result;
     });
@@ -59,7 +69,7 @@ export class LaughingManService {
   }
 
   /**
-   * 対象のキャンバスを顔認識させ、認識した顔情報を
+   * 対象のcanvasを顔認識させ、認識した顔情報を
    * 笑い男に置き換える。
    */
   public convertImage() {
@@ -82,25 +92,25 @@ export class LaughingManService {
   }
 
   /**
-   * キャンバスにイメージがセットされているか否か
+   * canvasにイメージがセットされているか否か
    */
   public isSetImage(): boolean {
     return this.canvas != null && this.loadImage != null;
   }
 
   /**
-   * キャンバスがセットされているどうか
+   * canvasがセットされているどうか
    */
   private isSetCanvas(): boolean {
     return this.canvas != null;
   }
 
   /**
-   * キャンバスの描画内容をクリアする
+   * canvasの描画内容をクリアする
    */
   private clearCanvas() {
 
-    // キャンバスがセットされていなければ終了する
+    // canvasがセットされていなければ終了する
     if (!this.isSetCanvas()) {
       return;
     }
@@ -110,11 +120,11 @@ export class LaughingManService {
   }
 
   /**
-   * 顔認識した座標情報からキャンバス内の顔情報を笑い男で上書きする
+   * 顔認識した座標情報からcanvas内の顔情報を笑い男で上書きする
    */
   private convertLaughingMan(rect: tracking.TrackRect): boolean {
 
-    // キャンバスが存在しない場合異常終了とする
+    // canvasが存在しない場合異常終了とする
     if (!this.isSetCanvas()) {
       return false;
     }
@@ -129,4 +139,24 @@ export class LaughingManService {
 
   }
 
+  /**
+   * canvasのサイズを読み込んだ画像に応じて変更します。
+   * 最大サイズを超えた場合、最大サイズに合わせてcanvasサイズを補正します。
+   * @param loadImage 読み込んだ画像
+   */
+  private resizeCanvas(loadImage: HTMLImageElement) {
+    const canvas = this.canvas;
+    if (loadImage.width <= myConst.canvasMaxSize && loadImage.height <= myConst.canvasMaxSize) {
+        // 読み込んだ画像が最大サイズを超えない場合、canvasサイズは画像のサイズとする
+        canvas.width = loadImage.width;
+        canvas.height = loadImage.height;
+        return;
+    }
+
+    // 最大サイズを超えた画像を読み込んだ場合、最大サイズに収まるようにcanvasサイズを調整
+    const magnification = (loadImage.width > loadImage.height ? loadImage.width : loadImage.height)
+                          / myConst.canvasMaxSize;
+    canvas.width = Math.floor(loadImage.width / magnification);
+    canvas.height = Math.floor(loadImage.height / magnification);
+  }
 }

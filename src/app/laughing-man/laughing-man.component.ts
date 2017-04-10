@@ -11,7 +11,7 @@ import { LaughingManService } from './laughing-man.service';
 
 
 export class LaughingManComponent implements OnInit {
-  
+
   /** 画像選択後に表示するキャンバス */
   @ViewChild('dropCanvas') dropCanvas;
 
