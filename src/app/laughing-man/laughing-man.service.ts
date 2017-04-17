@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LoadingService } from '../loading/loading.service';
 
 require('tracking');
 require('tracking/build/data/face-min');
@@ -17,7 +18,7 @@ export class LaughingManService {
   /** canvasに描画するイメージ */
   private loadImage: HTMLImageElement;
 
-  constructor() { }
+  constructor(private loadingService: LoadingService) { }
 
   /**
    * 対象のcanvasをセットする。
@@ -74,6 +75,12 @@ export class LaughingManService {
    */
   public convertImage() {
 
+    this.loadingService.startLoading();
+
+    this.execAsync(this.asyncConvertImage);
+
+
+/*
     const tracker = new tracking.ObjectTracker(['face']);
 
     tracker.on('track', (event) => {
@@ -86,9 +93,75 @@ export class LaughingManService {
           this.convertLaughingMan(rect);
         });
       }
+      this.loadingService.disableLoading();
     });
 
     tracking.track('#dropCanvas', tracker);
+    */
+  }
+
+
+  private execAsync(func: Function) {
+    // ローディング画像表示
+    this.loadingService.startLoading();
+
+    const promise = new Promise((resolve) => {
+
+      setTimeout(() => {
+        // 内部処理実行
+        func(this);
+        // 正常終了後の処理
+        resolve();
+      }, 0);
+
+    }).then(() => {
+     // ローディング画像非表示
+     this.loadingService.endLoading();
+    });
+  }
+
+  private asyncConvertImage(service: LaughingManService) {
+
+    const tracker = new tracking.ObjectTracker(['face']);
+
+    tracker.on('track', (event) => {
+      if (event.data.length === 0) {
+        // 顔画像が見つからない場合.
+        console.log('Sorry! Can not find face!');
+      } else {
+        event.data.forEach((rect) => {
+          // 顔画像が見つかった場合
+          service.convertLaughingMan(rect);
+        });
+      }
+      console.log("変換終了");
+    });
+
+    tracking.track('#dropCanvas', tracker);
+
+/*
+
+
+    return new Promise(() => {
+      const tracker = new tracking.ObjectTracker(['face']);
+
+      tracker.on('track', (event) => {
+        if (event.data.length === 0) {
+          // 顔画像が見つからない場合.
+          console.log('Sorry! Can not find face!');
+        } else {
+          event.data.forEach((rect) => {
+            // 顔画像が見つかった場合
+            this.convertLaughingMan(rect);
+          });
+        }
+        this.loadingService.disableLoading();
+      });
+
+      tracking.track('#dropCanvas', tracker);
+    });
+
+*/
   }
 
   /**

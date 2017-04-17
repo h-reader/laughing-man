@@ -1,7 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { LaughingManService } from './laughing-man.service';
 
-
 @Component({
   selector: 'app-laughing-man',
   templateUrl: './laughing-man.component.html',

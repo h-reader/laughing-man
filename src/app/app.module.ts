@@ -6,11 +6,13 @@ import { Ng2BootstrapModule } from 'ng2-bootstrap/ng2-bootstrap';
 
 import { AppComponent } from './app.component';
 import { LaughingManComponent } from './laughing-man/laughing-man.component';
+import { LoadingComponent } from './loading/loading.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LaughingManComponent
+    LaughingManComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,
