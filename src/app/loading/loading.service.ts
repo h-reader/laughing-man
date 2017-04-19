@@ -4,7 +4,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 export class LoadingService {
 
   public loadingChange: EventEmitter<boolean> = new EventEmitter();
-  
+
   private _isLoading: boolean;
 
   constructor() {

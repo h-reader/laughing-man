@@ -14,7 +14,7 @@ describe('LoadingService', () => {
   }));
 
   it('normal test', inject([LoadingService], (service: LoadingService) => {
-    
+
     // 初期状態はFalse
     expect(service.isLoading()).toBeFalsy();
 

@@ -1,10 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
+
 import { LaughingManService } from './laughing-man.service';
+import { LoadingService } from '../loading/loading.service';
 
 describe('LaughingManService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [LaughingManService]
+      providers: [
+        LaughingManService,
+        LoadingService
+      ]
     });
   });
 
@@ -13,8 +18,8 @@ describe('LaughingManService', () => {
   }));
 
   describe('正常系', () => {
-    const canvas = document.createElement("canvas");
-    let blob: Blob = new Blob();
+    const canvas = document.createElement('canvas');
+    const blob: Blob = new Blob();
 
     // サンプル用の画像データを出力
     /*
@@ -27,13 +32,11 @@ describe('LaughingManService', () => {
     req.send();
     */
 
-    it('canvasが正常に設定できるか', inject([LaughingManService], (service: LaughingManService) => {
+    it('canvasへの画像表示・変換(顔認識なし)', inject([LaughingManService], (service: LaughingManService) => {
       expect(service.setCanvas(canvas)).toBeTruthy();
+      expect(service.setImage(blob)).toBeTruthy();
+      expect(service.convertImage()).toBeFalsy();
     }));
-
-    console.log(blob);
-
-    
 
   });
 

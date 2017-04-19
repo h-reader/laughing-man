@@ -26,7 +26,6 @@ export class LaughingManComponent implements OnInit {
    */
   public showImage4Canvas(inputFile: HTMLInputElement) {
     if (inputFile != null && inputFile.files != null && inputFile.files.length > 0) {
-      console.log(inputFile.files[0]);
       this.laughingManService.setCanvas(this.dropCanvas.nativeElement);
       this.laughingManService.setImage(inputFile.files[0]);
     }

@@ -6,7 +6,7 @@ require('tracking/build/data/face-min');
 
 module myConst {
   /** canvasの最大サイズ */
-  export const canvasMaxSize: number = 1000;
+  export const canvasMaxSize = 1000;
 }
 
 
@@ -78,26 +78,6 @@ export class LaughingManService {
     this.loadingService.startLoading();
 
     this.execAsync(this.asyncConvertImage);
-
-
-/*
-    const tracker = new tracking.ObjectTracker(['face']);
-
-    tracker.on('track', (event) => {
-      if (event.data.length === 0) {
-        // 顔画像が見つからない場合.
-        console.log('Sorry! Can not find face!');
-      } else {
-        event.data.forEach((rect) => {
-          // 顔画像が見つかった場合
-          this.convertLaughingMan(rect);
-        });
-      }
-      this.loadingService.disableLoading();
-    });
-
-    tracking.track('#dropCanvas', tracker);
-    */
   }
 
 
@@ -120,6 +100,10 @@ export class LaughingManService {
     });
   }
 
+  /**
+   * 非同期で画像をコンバートする
+   * @param service 自身のサービス
+   */
   private asyncConvertImage(service: LaughingManService) {
 
     const tracker = new tracking.ObjectTracker(['face']);
@@ -134,34 +118,10 @@ export class LaughingManService {
           service.convertLaughingMan(rect);
         });
       }
-      console.log("変換終了");
+      console.log('変換終了');
     });
 
     tracking.track('#dropCanvas', tracker);
-
-/*
-
-
-    return new Promise(() => {
-      const tracker = new tracking.ObjectTracker(['face']);
-
-      tracker.on('track', (event) => {
-        if (event.data.length === 0) {
-          // 顔画像が見つからない場合.
-          console.log('Sorry! Can not find face!');
-        } else {
-          event.data.forEach((rect) => {
-            // 顔画像が見つかった場合
-            this.convertLaughingMan(rect);
-          });
-        }
-        this.loadingService.disableLoading();
-      });
-
-      tracking.track('#dropCanvas', tracker);
-    });
-
-*/
   }
 
   /**
